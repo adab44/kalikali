@@ -1,0 +1,100 @@
+#include <iostream>
+#include <cmath>
+#include <ns3/core-module.h>
+#include <ns3/network-module.h>
+#include <ns3/internet-module.h>
+#include <ns3/point-to-point-module.h>
+#include <ns3/applications-module.h>
+#include <ns3/netanim-module.h>
+
+using namespace ns3;
+
+void PacketSwitching(double fileSize, double senderSpeed, double receiverBandwidth) {
+    std::cout << "Packet Switching Simulation" << std::endl;
+    double transmissionTime = fileSize / std::min(senderSpeed, receiverBandwidth);
+    double latency = 100.0;
+    double efficiency = 0.85;
+    double packetLoss = (1 - efficiency) * fileSize;
+
+    std::cout << "Transmission Time: " << transmissionTime << " seconds\n";
+    std::cout << "Latency: " << latency << " ms\n";
+    std::cout << "Efficiency: " << efficiency * 100 << "%\n";
+    std::cout << "Packet Loss: " << packetLoss / 1024 << " KB\n";
+}
+
+void CircuitSwitching(double fileSize, double senderSpeed, double receiverBandwidth) {
+    std::cout << "Circuit Switching Simulation" << std::endl;
+    double setupTime = 2.0;
+    double transmissionTime = fileSize / std::min(senderSpeed, receiverBandwidth);
+    double totalTime = setupTime + transmissionTime;
+    double latency = 50.0;
+    double efficiency = 0.95;
+    double packetLoss = (1 - efficiency) * fileSize;
+
+    std::cout << "Total Time: " << totalTime << " seconds\n";
+    std::cout << "Latency: " << latency << " ms\n";
+    std::cout << "Efficiency: " << efficiency * 100 << "%\n";
+    std::cout << "Packet Loss: " << packetLoss / 1024 << " KB\n";
+}
+
+void VirtualCircuitSwitching(double fileSize, double senderSpeed, double receiverBandwidth) {
+    std::cout << "Virtual Circuit Switching Simulation" << std::endl;
+    double setupTime = 1.0;
+    double transmissionTime = fileSize / std::min(senderSpeed, receiverBandwidth);
+    double totalTime = setupTime + transmissionTime;
+    double latency = 75.0;
+    double efficiency = 0.90;
+    double packetLoss = (1 - efficiency) * fileSize;
+
+    std::cout << "Total Time: " << totalTime << " seconds\n";
+    std::cout << "Latency: " << latency << " ms\n";
+    std::cout << "Efficiency: " << efficiency * 100 << "%\n";
+    std::cout << "Packet Loss: " << packetLoss / 1024 << " KB\n";
+}
+
+int main(int argc, char *argv[]) {
+    CommandLine cmd;
+    cmd.Parse(argc, argv);
+
+    double videoDurationHours = 2.0;
+    double videoFileSizeMb = videoDurationHours * 700.0 / 2.0;
+    double fileSizeKb = videoFileSizeMb * 1024;
+
+    double senderSpeed = 10.0;
+    double receiverBandwidth = 15.0;
+
+    PacketSwitching(fileSizeKb, senderSpeed, receiverBandwidth);
+    CircuitSwitching(fileSizeKb, senderSpeed, receiverBandwidth);
+    VirtualCircuitSwitching(fileSizeKb, senderSpeed, receiverBandwidth);
+
+    NodeContainer nodes;
+    nodes.Create(2);
+
+    PointToPointHelper pointToPoint;
+    pointToPoint.SetDeviceAttribute("DataRate", StringValue("10kbps"));
+    pointToPoint.SetChannelAttribute("Delay", StringValue("2ms"));
+
+    NetDeviceContainer devices;
+    devices = pointToPoint.Install(nodes);
+
+    InternetStackHelper stack;
+    stack.Install(nodes);
+
+    Ipv4AddressHelper address;
+    address.SetBase("10.1.1.0", "255.255.255.0");
+
+    Ipv4InterfaceContainer interfaces = address.Assign(devices);
+
+    pointToPoint.EnableAscii("simulation", devices);
+    pointToPoint.EnablePcap("simulation", devices);
+
+    AnimationInterface anim("network-architecture.xml");
+
+    anim.SetConstantPosition(nodes.Get(0), 1.0, 1.0);
+    anim.SetConstantPosition(nodes.Get(1), 2.0, 2.0);
+
+    Simulator::Run();
+    Simulator::Destroy();
+
+    return 0;
+}
