@@ -6,14 +6,28 @@ Kodu kopyala
 git clone https://gitlab.com/nsnam/netanim.git
 Bu komut, NetAnim'in en son sürümünü indirecektir.
 
-2. Bağımlılıkları Yükle
-NetAnim, Qt5 kütüphanelerine ihtiyaç duyar. Bağımlılıkları yüklemek için şu komutları çalıştırın:
+Güncel Bağımlılıkları Yükleyin:
+Aşağıdaki komutları çalıştırarak NetAnim için gerekli bağımlılıkları yükleyin:
 
 bash
 Kodu kopyala
 sudo apt update
-sudo apt install qt5-default qttools5-dev-tools build-essential
-Bu komutlar, NetAnim'in çalışması için gerekli olan Qt araçlarını ve diğer derleme araçlarını yükleyecektir.
+sudo apt install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools build-essential
+Bu komutlar, gerekli Qt5 araçlarını yükleyecektir.
+
+NetAnim'i Derleme:
+Bağımlılıkları yükledikten sonra, NetAnim'i indirdiğiniz dizine gidip şu komutları çalıştırın:
+
+bash
+Kodu kopyala
+cd netanim
+qmake NetAnim.pro
+make
+qmake NetAnim.pro: Derleme işlemi için gerekli yapılandırmayı oluşturur.
+make: NetAnim'i derler.
+Eğer bu komutlar sorunsuz çalışırsa, NetAnim adında bir çalıştırılabilir dosya oluşacaktır.
+
+
 
 3. NetAnim'i Derle
 NetAnim'i derlemek için aşağıdaki adımları izleyin:
