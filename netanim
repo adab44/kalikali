@@ -1,0 +1,4 @@
+cd ~/Downloads/ns-allinone-3.43/netanim-3.108
+qmake NetAnim.pro
+make
+./NetAnim network-architecture.xml
