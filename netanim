@@ -66,3 +66,37 @@ Kodu kopyala
 cd ~/Downloads/ns-allinone-3.43/netanim-3.108
 ./NetAnim
 Eğer kurulum sırasında hata alırsanız, hata mesajını paylaşarak detaylı bir çözüm sağlayabiliriz.
+
+xxxxxxxxxxxxxxxxx
+
+1. NetAnim'i Doğru Şekilde Klonlayın
+Şu anda doğru bir şekilde klonlanmadığı anlaşılıyor. netanim klasörünü tamamen silin ve tekrar klonlayın:
+
+bash
+Kodu kopyala
+cd ~/Downloads/ns-allinone-3.43/
+rm -rf netanim
+git clone https://gitlab.com/nsnam/netanim.git
+Bu komut, NetAnim'in tam kaynak kodunu indirir.
+
+2. Klonlama İşleminden Sonra Kontrol Edin
+Klonlama tamamlandığında, netanim klasörüne gidin ve NetAnim.pro dosyasını kontrol edin:
+
+bash
+Kodu kopyala
+cd netanim
+ls
+Bu dizinde şu dosyalar görünmelidir:
+
+NetAnim.pro
+src/
+resources/
+data/
+3. NetAnim'i Derleme
+Eğer NetAnim.pro mevcutsa, şu komutlarla NetAnim'i derleyin:
+
+bash
+Kodu kopyala
+qmake NetAnim.pro
+make
+Bu işlem başarıyla tamamlanırsa, NetAnim adlı çalıştırılabilir bir dosya oluşacaktır.
