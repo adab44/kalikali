@@ -1,102 +1,81 @@
-1. NetAnim Kaynağını İndir
-NetAnim, NS3 paketinin bir parçası olarak gelmelidir. Ancak, eksikse NetAnim'in kaynak kodunu manuel olarak indirebilirsiniz:
+1. NetAnim'i Kurun
+NetAnim genellikle ns-3'ün contrib veya ayrı bir klasöründe bulunur. Eğer NetAnim kaynak dosyaları sisteminizde mevcut değilse, indirmeniz gerekebilir:
 
-bash
-Kodu kopyala
-git clone https://gitlab.com/nsnam/netanim.git
-Bu komut, NetAnim'in en son sürümünü indirecektir.
-
-Güncel Bağımlılıkları Yükleyin:
-Aşağıdaki komutları çalıştırarak NetAnim için gerekli bağımlılıkları yükleyin:
+a. Gerekli Paketleri Yükleyin
+NetAnim için bazı ek kütüphaneler gerekebilir. Örneğin:
 
 bash
 Kodu kopyala
 sudo apt update
-sudo apt install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools build-essential
-Bu komutlar, gerekli Qt5 araçlarını yükleyecektir.
-
-NetAnim'i Derleme:
-Bağımlılıkları yükledikten sonra, NetAnim'i indirdiğiniz dizine gidip şu komutları çalıştırın:
-
-bash
-Kodu kopyala
-cd netanim
-qmake NetAnim.pro
-make
-qmake NetAnim.pro: Derleme işlemi için gerekli yapılandırmayı oluşturur.
-make: NetAnim'i derler.
-Eğer bu komutlar sorunsuz çalışırsa, NetAnim adında bir çalıştırılabilir dosya oluşacaktır.
-
-
-
-3. NetAnim'i Derle
-NetAnim'i derlemek için aşağıdaki adımları izleyin:
-
-bash
-Kodu kopyala
-cd netanim
-qmake NetAnim.pro
-make
-qmake NetAnim.pro: NetAnim'in derleme dosyasını hazırlar.
-make: Derleme işlemini başlatır.
-Eğer işlem başarılı olursa, NetAnim adlı çalıştırılabilir bir dosya oluşturulacaktır.
-
-4. NetAnim'i Çalıştır
-NetAnim'i çalıştırmak için şu komutu kullanabilirsiniz:
-
-bash
-Kodu kopyala
-./NetAnim
-NetAnim açıldığında, ürettiğiniz network-architecture.xml gibi dosyaları sürükleyip bırakarak ağ simülasyonunu görselleştirebilirsiniz.
-
-5. NetAnim'in Entegre Olduğunu Kontrol Et
-NetAnim'i NS3'e entegre etmek için NS3'ün build.py dosyasını kullanarak her iki projeyi de yeniden derleyebilirsiniz:
+sudo apt install qt5-default build-essential
+b. NetAnim Kaynak Kodunu Bulun veya İndirin
+NetAnim genellikle ns-allinone-3.xx/netanim içinde bulunur. Eğer bu klasör yoksa, NetAnim'i manuel olarak indirmeniz gerekebilir:
 
 bash
 Kodu kopyala
 cd ~/Downloads/ns-allinone-3.43/
-./build.py --enable-examples --enable-tests
-Bu işlem, NS3 ve NetAnim'i bir bütün olarak yeniden yapılandıracaktır.
-
-6. Hata Durumunda Alternatif
-Eğer hala sorun yaşıyorsanız, aşağıdaki yöntemle NetAnim kullanımı için doğru klasörde olduğunuzu kontrol edin:
-
-bash
-Kodu kopyala
-cd ~/Downloads/ns-allinone-3.43/netanim-3.108
-./NetAnim
-Eğer kurulum sırasında hata alırsanız, hata mesajını paylaşarak detaylı bir çözüm sağlayabiliriz.
-
-xxxxxxxxxxxxxxxxx
-
-1. NetAnim'i Doğru Şekilde Klonlayın
-Şu anda doğru bir şekilde klonlanmadığı anlaşılıyor. netanim klasörünü tamamen silin ve tekrar klonlayın:
-
-bash
-Kodu kopyala
-cd ~/Downloads/ns-allinone-3.43/
-rm -rf netanim
 git clone https://gitlab.com/nsnam/netanim.git
-Bu komut, NetAnim'in tam kaynak kodunu indirir.
-
-2. Klonlama İşleminden Sonra Kontrol Edin
-Klonlama tamamlandığında, netanim klasörüne gidin ve NetAnim.pro dosyasını kontrol edin:
+c. NetAnim'i Derleyin
+NetAnim'i yüklemek için şu adımları izleyin:
 
 bash
 Kodu kopyala
 cd netanim
-ls
-Bu dizinde şu dosyalar görünmelidir:
+qmake NetAnim.pro
+make
+Eğer herhangi bir hata alırsanız, eksik bağımlılıkları kontrol edin.
 
-NetAnim.pro
-src/
-resources/
-data/
-3. NetAnim'i Derleme
-Eğer NetAnim.pro mevcutsa, şu komutlarla NetAnim'i derleyin:
+2. ns-3 ile NetAnim Uyumluluğunu Sağlayın
+NetAnim, ns-3 tarafından üretilen .xml dosyalarını kullanır. Bu dosyaları üretmek için ns3 simülasyonunuza aşağıdaki satırları ekleyin:
+
+a. Simülasyon Koduna NetAnim Çıkışı Ekleme
+Scratch dosyasını düzenlerken aşağıdaki örneği kullanabilirsiniz:
+
+cpp
+Kodu kopyala
+#include "ns3/netanim-module.h"
+
+// Simülasyon kodunuzun sonunda şu satırı ekleyin:
+AnimationInterface anim ("simulasyon-output.xml");
+Bu, simülasyonunuzun çıktısını simulasyon-output.xml dosyasına yazacaktır.
+
+b. Simülasyonu Çalıştırın
+bash
+Kodu kopyala
+cd ~/Downloads/ns-allinone-3.43/ns-3.43
+./waf --run scratch/<kod-dosyaniz>
+Eğer waf kullanmıyorsanız, manuel olarak şu şekilde derleyip çalıştırabilirsiniz:
 
 bash
 Kodu kopyala
-qmake NetAnim.pro
-make
-Bu işlem başarıyla tamamlanırsa, NetAnim adlı çalıştırılabilir bir dosya oluşacaktır.
+g++ -o output-file scratch/<kod-dosyaniz>.cc -lns3
+./output-file
+3. NetAnim ile Simülasyonu Görselleştirme
+NetAnim kurulumunu tamamladıktan sonra, aşağıdaki adımları izleyin:
+
+a. NetAnim'i Başlatın
+NetAnim uygulamasını çalıştırın:
+
+bash
+Kodu kopyala
+cd ~/Downloads/ns-allinone-3.43/netanim
+./NetAnim
+b. .xml Dosyasını Yükleyin
+NetAnim arayüzünden File -> Open seçeneğini kullanarak oluşturduğunuz simulasyon-output.xml dosyasını yükleyin. Bu, simülasyonunuzu görselleştirir.
+
+4. Mimari Diagram (Architecture Diagram) Çizimi
+Eğer sadece mimari diyagram gerekiyorsa, NetAnim bu konuda yardımcı olmayabilir. Diyagramları manuel olarak hazırlamak için bir araç kullanabilirsiniz. Önerilen araçlar:
+
+Draw.io (Web tabanlı)
+Microsoft Visio
+Lucidchart
+LibreOffice Draw
+Bu araçlarla ns-3 ve NetAnim arasında iletişimi gösteren bir diyagram oluşturabilirsiniz.
+
+Daha fazla desteğe ihtiyacınız varsa, mevcut dosya yapınız ve özel ihtiyaçlarınızı belirtmeniz yeterli!
+
+
+
+
+
+
